@@ -5,10 +5,29 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Utilisateur;
+use OpenApi\Attributes as OA;
+
 
 class AuthController extends Controller
 {
     // methode login
+    #[OA\Post(
+    path: "/api/login",
+    summary: "Connexion utilisateur",
+    requestBody: new OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: "matricule", type: "string", example: "ADMIN001"),
+                new OA\Property(property: "mot_de_passe", type: "string", example: "password123")
+            ]
+        )
+    ),
+    responses: [
+        new OA\Response(response: 200, description: "Connexion réussie"),
+        new OA\Response(response: 401, description: "Identifiants incorrects")
+    ]
+)]
     public function login (Request $request) {
         $request->validate([
             'matricule' => 'required|string',
